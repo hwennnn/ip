@@ -2,9 +2,12 @@ public class Deadline extends Task {
     
     protected String by;
     
-    public Deadline(String description, String by) {
+    public Deadline(String description, String by) throws ZenException {
         super(description);
-        this.by = by;
+        if (by == null || by.trim().isEmpty()) {
+            throw new ZenException("The deadline date cannot be empty.");
+        }
+        this.by = by.trim();
     }
     
     @Override
