@@ -65,15 +65,10 @@ ____________________________________________________________
  Task number is out of range!
 ____________________________________________________________
 ____________________________________________________________
- Got it. I've added this task:
-   [T][ ] todo
- Now you have 5 tasks in the list.
+ NOOOO!!! The description of a todo cannot be empty.
 ____________________________________________________________
 ____________________________________________________________
- Please use the format: deadline <description> /by <date>
-____________________________________________________________
-____________________________________________________________
- Please use the format: event <description> /from <start> /to <end>
+ NOOOOO!!! I'm sorry, but I don't know what that means :-(
 ____________________________________________________________
 ____________________________________________________________
  Bye. Hope to see you again soon!

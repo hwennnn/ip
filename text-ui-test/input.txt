@@ -12,6 +12,5 @@ list
 mark 5
 unmark 10
 todo
-deadline incomplete
-event incomplete /from today
+blash
 bye
