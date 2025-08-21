@@ -1,11 +1,11 @@
 public class Todo extends Task {
     
     public Todo(String description) throws ZenException {
-        super(description);
+        super(description, TaskType.TODO);
     }
     
     @Override
     public String toString() {
-        return "[T]" + super.toString();
+        return super.toString();
     }
 } 
