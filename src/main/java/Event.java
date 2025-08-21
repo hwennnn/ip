@@ -4,7 +4,7 @@ public class Event extends Task {
     protected String to;
     
     public Event(String description, String from, String to) throws ZenException {
-        super(description);
+        super(description, TaskType.EVENT);
         if (from == null || from.trim().isEmpty()) {
             throw new ZenException("The event start time cannot be empty.");
         }
@@ -17,6 +17,6 @@ public class Event extends Task {
     
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return super.toString() + " (from: " + from + " to: " + to + ")";
     }
 } 

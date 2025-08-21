@@ -1,13 +1,15 @@
-class Task {
+abstract class Task {
     protected String description;
     protected boolean isDone;
+    protected TaskType taskType;
 
-    public Task(String description) throws ZenException {
+    public Task(String description, TaskType taskType) throws ZenException {
         if (description == null || description.trim().isEmpty()) {
             throw new ZenException("The description of a task cannot be empty.");
         }
         this.description = description.trim();
         this.isDone = false;
+        this.taskType = taskType;
     }
 
     public String getStatusIcon() {
@@ -28,6 +30,6 @@ class Task {
 
     @Override
     public String toString() {
-        return "[" + getStatusIcon() + "] " + description;
+        return taskType + "[" + getStatusIcon() + "] " + description;
     }
 } 
