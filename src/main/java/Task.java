@@ -2,8 +2,11 @@ class Task {
     protected String description;
     protected boolean isDone;
 
-    public Task(String description) {
-        this.description = description;
+    public Task(String description) throws ZenException {
+        if (description == null || description.trim().isEmpty()) {
+            throw new ZenException("The description of a task cannot be empty.");
+        }
+        this.description = description.trim();
         this.isDone = false;
     }
 

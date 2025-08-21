@@ -58,68 +58,85 @@ public class Zen {
                     System.out.println(" Please provide a valid task number!");
                 }
                 System.out.println("____________________________________________________________");
+            } else if (input.equals("todo")) {
+                System.out.println(" NOOOO!!! The description of a todo cannot be empty.");
+                System.out.println("____________________________________________________________");
             } else if (input.startsWith("todo ")) {
-                String description = input.substring(5);
-                if (taskCount < 100) {
-                    tasks[taskCount] = new Todo(description);
-                    taskCount++;
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + tasks[taskCount - 1]);
-                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
-                } else {
-                    System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                String description = input.substring(5).trim();
+                try {
+                    if (taskCount < 100) {
+                        tasks[taskCount] = new Todo(description);
+                        taskCount++;
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + tasks[taskCount - 1]);
+                        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    } else {
+                        System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                    }
+                } catch (ZenException e) {
+                    System.out.println(" NOOOO!!! " + e.getMessage());
                 }
+                System.out.println("____________________________________________________________");
+            } else if (input.equals("deadline")) {
+                System.out.println(" NOOOO!!! Please use the format: deadline <description> /by <date>");
                 System.out.println("____________________________________________________________");
             } else if (input.startsWith("deadline ")) {
-                String remaining = input.substring(9);
+                String remaining = input.substring(9).trim();
                 int byIndex = remaining.indexOf(" /by ");
-                if (byIndex != -1) {
-                    String description = remaining.substring(0, byIndex);
-                    String by = remaining.substring(byIndex + 5);
-                    if (taskCount < 100) {
-                        tasks[taskCount] = new Deadline(description, by);
-                        taskCount++;
-                        System.out.println(" Got it. I've added this task:");
-                        System.out.println("   " + tasks[taskCount - 1]);
-                        System.out.println(" Now you have " + taskCount + " tasks in the list.");
-                    } else {
-                        System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                if (byIndex != -1 && byIndex + 5 < remaining.length()) {
+                    String description = remaining.substring(0, byIndex).trim();
+                    String by = remaining.substring(byIndex + 5).trim();
+                    try {
+                        if (taskCount < 100) {
+                            tasks[taskCount] = new Deadline(description, by);
+                            taskCount++;
+                            System.out.println(" Got it. I've added this task:");
+                            System.out.println("   " + tasks[taskCount - 1]);
+                            System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                        } else {
+                            System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                        }
+                    } catch (ZenException e) {
+                        System.out.println(" NOOOOO!!! " + e.getMessage());
                     }
                 } else {
-                    System.out.println(" Please use the format: deadline <description> /by <date>");
+                    System.out.println(" NOOOOO!!! Please use the format: deadline <description> /by <date>");
                 }
                 System.out.println("____________________________________________________________");
+            } else if (input.equals("event")) {
+                System.out.println(" NOOOOO!!! Please use the format: event <description> /from <start> /to <end>");
+                System.out.println("____________________________________________________________");
             } else if (input.startsWith("event ")) {
-                String remaining = input.substring(6);
+                String remaining = input.substring(6).trim();
                 int fromIndex = remaining.indexOf(" /from ");
                 int toIndex = remaining.indexOf(" /to ");
-                if (fromIndex != -1 && toIndex != -1) {
-                    String description = remaining.substring(0, fromIndex);
-                    String from = remaining.substring(fromIndex + 7, toIndex);
-                    String to = remaining.substring(toIndex + 5);
-                    if (taskCount < 100) {
-                        tasks[taskCount] = new Event(description, from, to);
-                        taskCount++;
-                        System.out.println(" Got it. I've added this task:");
-                        System.out.println("   " + tasks[taskCount - 1]);
-                        System.out.println(" Now you have " + taskCount + " tasks in the list.");
-                    } else {
-                        System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex && toIndex + 5 < remaining.length()) {
+                    String description = remaining.substring(0, fromIndex).trim();
+                    String from = remaining.substring(fromIndex + 7, toIndex).trim();
+                    String to = remaining.substring(toIndex + 5).trim();
+                    try {
+                        if (taskCount < 100) {
+                            tasks[taskCount] = new Event(description, from, to);
+                            taskCount++;
+                            System.out.println(" Got it. I've added this task:");
+                            System.out.println("   " + tasks[taskCount - 1]);
+                            System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                        } else {
+                            System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                        }
+                    } catch (ZenException e) {
+                        System.out.println(" NOOOOO!!! " + e.getMessage());
                     }
                 } else {
-                    System.out.println(" Please use the format: event <description> /from <start> /to <end>");
+                    System.out.println(" NOOOOO!!! Please use the format: event <description> /from <start> /to <end>");
                 }
                 System.out.println("____________________________________________________________");
             } else {
-                // Default: treat as a todo task for backward compatibility
-                if (taskCount < 100) {
-                    tasks[taskCount] = new Todo(input);
-                    taskCount++;
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + tasks[taskCount - 1]);
-                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                // Handle unknown commands and empty input
+                if (input.isEmpty()) {
+                    System.out.println(" NOOOOO!!! Please enter a command.");
                 } else {
-                    System.out.println(" Sorry, you have reached the maximum of 100 tasks!");
+                    System.out.println(" NOOOOO!!! I'm sorry, but I don't know what that means :-(");
                 }
                 System.out.println("____________________________________________________________");
             }
