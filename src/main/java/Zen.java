@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Zen {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         
         System.out.println("____________________________________________________________");
@@ -24,15 +24,44 @@ public class Zen {
                 if (taskCount == 0) {
                     System.out.println(" No tasks in your list yet!");
                 } else {
+                    System.out.println(" Here are the tasks in your list:");
                     for (int i = 0; i < taskCount; i++) {
-                        System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                        System.out.println(" " + (i + 1) + "." + tasks[i]);
                     }
+                }
+                System.out.println("____________________________________________________________");
+            } else if (input.startsWith("mark ")) {
+                try {
+                    int taskIndex = Integer.parseInt(input.substring(5)) - 1;
+                    if (taskIndex >= 0 && taskIndex < taskCount) {
+                        tasks[taskIndex].markAsDone();
+                        System.out.println(" Nice! I've marked this task as done:");
+                        System.out.println("   " + tasks[taskIndex]);
+                    } else {
+                        System.out.println(" Task number is out of range!");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(" Please provide a valid task number!");
+                }
+                System.out.println("____________________________________________________________");
+            } else if (input.startsWith("unmark ")) {
+                try {
+                    int taskIndex = Integer.parseInt(input.substring(7)) - 1;
+                    if (taskIndex >= 0 && taskIndex < taskCount) {
+                        tasks[taskIndex].markAsNotDone();
+                        System.out.println(" OK, I've marked this task as not done yet:");
+                        System.out.println("   " + tasks[taskIndex]);
+                    } else {
+                        System.out.println(" Task number is out of range!");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(" Please provide a valid task number!");
                 }
                 System.out.println("____________________________________________________________");
             } else {
                 // Add the task to the array
                 if (taskCount < 100) {
-                    tasks[taskCount] = input;
+                    tasks[taskCount] = new Task(input);
                     taskCount++;
                     System.out.println(" added: " + input);
                 } else {
