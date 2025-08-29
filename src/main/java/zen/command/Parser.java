@@ -1,3 +1,9 @@
+package zen.command;
+
+import zen.exception.ZenException;
+import zen.task.Deadline;
+import zen.task.Event;
+
 /**
  * Handles parsing of user commands and extracting relevant information
  */
@@ -82,7 +88,7 @@ public class Parser {
             return new Deadline(description, by);
         }
         
-        throw new ZenException("Invalid deadline format");
+        return null;
     }
 
     /**
@@ -102,7 +108,7 @@ public class Parser {
             return new Event(description, from, to);
         }
         
-        throw new ZenException("Invalid event format");
+        return null;
     }
 
     /**

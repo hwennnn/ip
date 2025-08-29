@@ -1,10 +1,18 @@
+package zen;
+
+import zen.command.Parser;
+import zen.exception.ZenException;
+import zen.storage.Storage;
+import zen.task.*;
+import zen.ui.Ui;
+
 /**
  * Main class for the Zen task management chatbot
  */
 public class Zen {
-    private Storage storage;
+    private final Storage storage;
     private TaskList tasks;
-    private Ui ui;
+    private final Ui ui;
 
     /**
      * Constructs a Zen instance with default data file location

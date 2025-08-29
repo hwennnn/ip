@@ -1,3 +1,8 @@
+package zen.task;
+
+import zen.exception.ZenException;
+import zen.util.FlexibleDateTime;
+
 public class Deadline extends Task {
     
     protected FlexibleDateTime by;

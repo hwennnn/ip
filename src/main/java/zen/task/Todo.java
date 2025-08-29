@@ -1,3 +1,7 @@
+package zen.task;
+
+import zen.exception.ZenException;
+
 public class Todo extends Task {
     
     public Todo(String description) throws ZenException {

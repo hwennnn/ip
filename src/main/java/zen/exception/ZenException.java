@@ -1,3 +1,5 @@
+package zen.exception;
+
 /**
  * Exception class to handle errors specific to Zen chatbot
  */

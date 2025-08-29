@@ -1,4 +1,8 @@
-abstract class Task {
+package zen.task;
+
+import zen.exception.ZenException;
+
+public abstract class Task {
     protected String description;
     protected boolean isDone;
     protected TaskType taskType;
