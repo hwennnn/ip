@@ -1,9 +1,9 @@
 package zen.ui;
 
-import zen.task.Task;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import zen.task.Task;
 
 /**
  * Handles all user interface operations including input and output
@@ -75,6 +75,21 @@ public class Ui {
             System.out.println(" Here are the tasks in your list:");
             for (int i = 0; i < tasks.size(); i++) {
                 System.out.println(" " + (i + 1) + "." + tasks.get(i));
+            }
+        }
+    }
+
+    /**
+     * Shows the matching tasks from a find operation
+     * @param matchingTasks the list of tasks that match the search keyword
+     */
+    public void showMatchingTasks(ArrayList<Task> matchingTasks) {
+        if (matchingTasks.isEmpty()) {
+            System.out.println(" No matching tasks found in your list.");
+        } else {
+            System.out.println(" Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println(" " + (i + 1) + "." + matchingTasks.get(i));
             }
         }
     }

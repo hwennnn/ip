@@ -3,16 +3,22 @@ package zen;
 import zen.command.Parser;
 import zen.exception.ZenException;
 import zen.storage.Storage;
-import zen.task.*;
+import zen.task.Deadline;
+import zen.task.Event;
+import zen.task.Task;
+import zen.task.TaskList;
+import zen.task.Todo;
 import zen.ui.Ui;
+
+import java.util.ArrayList;
 
 /**
  * Main class for the Zen task management chatbot
  */
 public class Zen {
     private final Storage storage;
-    private TaskList tasks;
     private final Ui ui;
+    private TaskList tasks;
 
     /**
      * Constructs a Zen instance with default data file location
@@ -29,94 +35,110 @@ public class Zen {
     }
 
     /**
+     * Main method to start the application
+     */
+    public static void main(String[] args) {
+        new Zen().run();
+    }
+
+    /**
      * Runs the main application loop
      */
     public void run() {
         ui.showWelcome();
-        
+
         while (true) {
             try {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
-                
+
                 if (handleCommand(fullCommand)) {
                     break; // Exit if bye command
                 }
-                
+
             } catch (ZenException e) {
                 ui.showError(e.getMessage());
             } finally {
                 ui.showLine();
             }
         }
-        
+
         ui.close();
     }
 
     /**
      * Handles a single command and returns whether to exit
+     *
      * @param fullCommand the command to handle
      * @return true if the application should exit, false otherwise
      * @throws ZenException if there's an error processing the command
      */
     private boolean handleCommand(String fullCommand) throws ZenException {
         Parser.CommandType commandType = Parser.parseCommand(fullCommand);
-        
+
         switch (commandType) {
-            case BYE:
-                ui.showGoodbye();
-                return true;
-                
-            case LIST:
-                ui.showTaskList(tasks.getTasks());
-                break;
-                
-            case MARK:
-                handleMarkCommand(fullCommand);
-                break;
-                
-            case UNMARK:
-                handleUnmarkCommand(fullCommand);
-                break;
-                
-            case DELETE:
-                handleDeleteCommand(fullCommand);
-                break;
-                
-            case TODO_EMPTY:
-                ui.showError("The description of a todo cannot be empty.");
-                break;
-                
-            case TODO:
-                handleTodoCommand(fullCommand);
-                break;
-                
-            case DEADLINE_EMPTY:
-                ui.showError("Please use the format: deadline <description> /by <date>");
-                break;
-                
-            case DEADLINE:
-                handleDeadlineCommand(fullCommand);
-                break;
-                
-            case EVENT_EMPTY:
-                ui.showError("Please use the format: event <description> /from <start> /to <end>");
-                break;
-                
-            case EVENT:
-                handleEventCommand(fullCommand);
-                break;
-                
-            case EMPTY:
-                ui.showError("Please enter a command.");
-                break;
-                
-            case UNKNOWN:
-            default:
-                ui.showError("I'm sorry, but I don't know what that means :-(");
-                break;
+        case BYE:
+            ui.showGoodbye();
+            return true;
+
+        case LIST:
+            ui.showTaskList(tasks.getTasks());
+            break;
+
+        case MARK:
+            handleMarkCommand(fullCommand);
+            break;
+
+        case UNMARK:
+            handleUnmarkCommand(fullCommand);
+            break;
+
+        case DELETE:
+            handleDeleteCommand(fullCommand);
+            break;
+
+        case TODO_EMPTY:
+            ui.showError("The description of a todo cannot be empty.");
+            break;
+
+        case TODO:
+            handleTodoCommand(fullCommand);
+            break;
+
+        case DEADLINE_EMPTY:
+            ui.showError("Please use the format: deadline <description> /by <date>");
+            break;
+
+        case DEADLINE:
+            handleDeadlineCommand(fullCommand);
+            break;
+
+        case EVENT_EMPTY:
+            ui.showError("Please use the format: event <description> /from <start> /to <end>");
+            break;
+
+        case EVENT:
+            handleEventCommand(fullCommand);
+            break;
+
+        case FIND_EMPTY:
+            ui.showError("Please provide a keyword to search for.");
+            break;
+
+        case FIND:
+            handleFindCommand(fullCommand);
+            break;
+
+        case EMPTY:
+            ui.showError("Please enter a command.");
+            break;
+
+        case UNKNOWN:
+        default:
+            ui.showError("I'm sorry, but I don't know what that means :-(");
+            break;
         }
-        
+
         return false;
     }
 
@@ -129,7 +151,7 @@ public class Zen {
             ui.showError("Please provide a valid task number!");
             return;
         }
-        
+
         try {
             Task task = tasks.markTask(index);
             storage.save(tasks.getTasks());
@@ -148,7 +170,7 @@ public class Zen {
             ui.showError("Please provide a valid task number!");
             return;
         }
-        
+
         try {
             Task task = tasks.unmarkTask(index);
             storage.save(tasks.getTasks());
@@ -167,7 +189,7 @@ public class Zen {
             ui.showError("Please provide a valid task number!");
             return;
         }
-        
+
         try {
             Task task = tasks.deleteTask(index);
             storage.save(tasks.getTasks());
@@ -212,16 +234,18 @@ public class Zen {
             ui.showError("Please use the format: event <description> /from <start> /to <end>");
             return;
         }
-        
+
         tasks.addTask(info);
         storage.save(tasks.getTasks());
         ui.showTaskAdded(info, tasks.size());
     }
 
     /**
-     * Main method to start the application
+     * Handles find command
      */
-    public static void main(String[] args) {
-        new Zen().run();
+    private void handleFindCommand(String command) {
+        String keyword = Parser.parseFindKeyword(command);
+        ArrayList<Task> matchingTasks = tasks.findTasks(keyword);
+        ui.showMatchingTasks(matchingTasks);
     }
 }

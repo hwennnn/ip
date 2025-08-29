@@ -11,6 +11,7 @@ public class Parser {
 
     /**
      * Parses a user command and returns the command type
+     *
      * @param fullCommand the full command string from user
      * @return CommandType representing the parsed command
      */
@@ -20,7 +21,7 @@ public class Parser {
         }
 
         String command = fullCommand.trim();
-        
+
         if (command.equals("bye")) {
             return CommandType.BYE;
         } else if (command.equals("list")) {
@@ -43,6 +44,10 @@ public class Parser {
             return CommandType.EVENT_EMPTY;
         } else if (command.startsWith("event ")) {
             return CommandType.EVENT;
+        } else if (command.equals("find")) {
+            return CommandType.FIND_EMPTY;
+        } else if (command.startsWith("find ")) {
+            return CommandType.FIND;
         } else {
             return CommandType.UNKNOWN;
         }
@@ -50,8 +55,9 @@ public class Parser {
 
     /**
      * Extracts the task index from mark/unmark/delete commands
+     *
      * @param command the command string
-     * @param prefix the command prefix (e.g., "mark ", "unmark ", "delete ")
+     * @param prefix  the command prefix (e.g., "mark ", "unmark ", "delete ")
      * @return the task index (0-based) or -1 if invalid
      */
     public static int parseTaskIndex(String command, String prefix) {
@@ -66,6 +72,7 @@ public class Parser {
 
     /**
      * Extracts the description from todo commands
+     *
      * @param command the todo command
      * @return the task description
      */
@@ -74,25 +81,37 @@ public class Parser {
     }
 
     /**
+     * Extracts the keyword from find commands
+     *
+     * @param command the find command
+     * @return the search keyword
+     */
+    public static String parseFindKeyword(String command) {
+        return command.substring(5).trim(); // Remove "find "
+    }
+
+    /**
      * Parses deadline command and extracts description and by date
+     *
      * @param command the deadline command
      * @return DeadlineInfo containing description and by date, or null if invalid format
      */
     public static Deadline parseDeadline(String command) throws ZenException {
         String remaining = command.substring(9).trim(); // Remove "deadline "
         int byIndex = remaining.indexOf(" /by ");
-        
+
         if (byIndex != -1 && byIndex + 5 < remaining.length()) {
             String description = remaining.substring(0, byIndex).trim();
             String by = remaining.substring(byIndex + 5).trim();
             return new Deadline(description, by);
         }
-        
+
         return null;
     }
 
     /**
      * Parses event command and extracts description, from time, and to time
+     *
      * @param command the event command
      * @return EventInfo containing description, from, and to times, or null if invalid format
      */
@@ -100,14 +119,14 @@ public class Parser {
         String remaining = command.substring(6).trim(); // Remove "event "
         int fromIndex = remaining.indexOf(" /from ");
         int toIndex = remaining.indexOf(" /to ");
-        
+
         if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex && toIndex + 5 < remaining.length()) {
             String description = remaining.substring(0, fromIndex).trim();
             String from = remaining.substring(fromIndex + 7, toIndex).trim();
             String to = remaining.substring(toIndex + 5).trim();
             return new Event(description, from, to);
         }
-        
+
         return null;
     }
 
@@ -115,8 +134,8 @@ public class Parser {
      * Enum representing different command types
      */
     public enum CommandType {
-        BYE, LIST, MARK, UNMARK, DELETE, 
-        TODO, TODO_EMPTY, DEADLINE, DEADLINE_EMPTY, 
-        EVENT, EVENT_EMPTY, UNKNOWN, EMPTY
+        BYE, LIST, MARK, UNMARK, DELETE,
+        TODO, TODO_EMPTY, DEADLINE, DEADLINE_EMPTY,
+        EVENT, EVENT_EMPTY, FIND, FIND_EMPTY, UNKNOWN, EMPTY
     }
 }
