@@ -5,12 +5,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskStorage {
+public class Storage {
     private static final String DATA_DIRECTORY = "data";
     private static final String DATA_FILE = "duke.txt";
     private final Path dataPath;
 
-    public TaskStorage() {
+    /**
+     * Constructs a Storage instance with the default data file location
+     */
+    public Storage() {
         this.dataPath = Paths.get(DATA_DIRECTORY, DATA_FILE);
     }
 
@@ -18,8 +21,9 @@ public class TaskStorage {
      * Loads tasks from the data file.
      * Creates the data directory and file if they don't exist.
      * @return ArrayList of tasks loaded from file
+     * @throws ZenException if there's an error loading tasks
      */
-    public ArrayList<Task> loadTasks() {
+    public ArrayList<Task> load() throws ZenException {
         ArrayList<Task> tasks = new ArrayList<>();
         
         try {
@@ -46,7 +50,7 @@ public class TaskStorage {
             }
             
         } catch (IOException e) {
-            System.out.println("Error: Failed to load tasks: " + e.getMessage());
+            throw new ZenException("Failed to load tasks: " + e.getMessage());
         }
         
         return tasks;
@@ -55,8 +59,9 @@ public class TaskStorage {
     /**
      * Saves tasks to the data file.
      * @param tasks ArrayList of tasks to save
+     * @throws ZenException if there's an error saving tasks
      */
-    public void saveTasks(ArrayList<Task> tasks) {
+    public void save(ArrayList<Task> tasks) throws ZenException {
         try {
             // Create data directory if it doesn't exist
             Files.createDirectories(dataPath.getParent());
@@ -70,7 +75,7 @@ public class TaskStorage {
             Files.write(dataPath, lines);
             
         } catch (IOException e) {
-            System.out.println("Error: Failed to save tasks: " + e.getMessage());
+            throw new ZenException("Failed to save tasks: " + e.getMessage());
         }
     }
 

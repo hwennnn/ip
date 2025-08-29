@@ -1,154 +1,219 @@
-import java.util.ArrayList;
-import java.util.Scanner;
-
+/**
+ * Main class for the Zen task management chatbot
+ */
 public class Zen {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        TaskStorage storage = new TaskStorage();
-        ArrayList<Task> tasks = storage.loadTasks();
-        
-        System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Zen");
-        System.out.println(" What can I do for you?");
-        System.out.println("____________________________________________________________");
+    private Storage storage;
+    private TaskList tasks;
+    private Ui ui;
+
+    /**
+     * Constructs a Zen instance with default data file location
+     */
+    public Zen() {
+        ui = new Ui();
+        storage = new Storage();
+        try {
+            tasks = new TaskList(storage.load());
+        } catch (ZenException e) {
+            ui.showLoadingError();
+            tasks = new TaskList();
+        }
+    }
+
+    /**
+     * Runs the main application loop
+     */
+    public void run() {
+        ui.showWelcome();
         
         while (true) {
-            String input = scanner.nextLine().trim();
-            
-            System.out.println("____________________________________________________________");
-            
-            if (input.equals("bye")) {
-                System.out.println(" Bye. Hope to see you again soon!");
-                System.out.println("____________________________________________________________");
-                break;
-            } else if (input.equals("list")) {
-                if (tasks.isEmpty()) {
-                    System.out.println(" No tasks in your list yet!");
-                } else {
-                    System.out.println(" Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println(" " + (i + 1) + "." + tasks.get(i));
-                    }
+            try {
+                String fullCommand = ui.readCommand();
+                ui.showLine();
+                
+                if (handleCommand(fullCommand)) {
+                    break; // Exit if bye command
                 }
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("mark ")) {
-                try {
-                    int taskIndex = Integer.parseInt(input.substring(5)) - 1;
-                    if (taskIndex >= 0 && taskIndex < tasks.size()) {
-                        tasks.get(taskIndex).markAsDone();
-                        storage.saveTasks(tasks);
-                        System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   " + tasks.get(taskIndex));
-                    } else {
-                        System.out.println(" Task number is out of range!");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(" Please provide a valid task number!");
-                }
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("unmark ")) {
-                try {
-                    int taskIndex = Integer.parseInt(input.substring(7)) - 1;
-                    if (taskIndex >= 0 && taskIndex < tasks.size()) {
-                        tasks.get(taskIndex).markAsNotDone();
-                        storage.saveTasks(tasks);
-                        System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   " + tasks.get(taskIndex));
-                    } else {
-                        System.out.println(" Task number is out of range!");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(" Please provide a valid task number!");
-                }
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("delete ")) {
-                try {
-                    int taskIndex = Integer.parseInt(input.substring(7)) - 1;
-                    if (taskIndex >= 0 && taskIndex < tasks.size()) {
-                        Task removedTask = tasks.remove(taskIndex);
-                        storage.saveTasks(tasks);
-                        System.out.println(" Noted. I've removed this task:");
-                        System.out.println("   " + removedTask);
-                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    } else {
-                        System.out.println(" Task number is out of range!");
-                    }
-                } catch (NumberFormatException e) {
-                    System.out.println(" Please provide a valid task number!");
-                }
-                System.out.println("____________________________________________________________");
-            } else if (input.equals("todo")) {
-                System.out.println(" NOOOO!!! The description of a todo cannot be empty.");
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("todo ")) {
-                String description = input.substring(5).trim();
-                try {
-                    tasks.add(new Todo(description));
-                    storage.saveTasks(tasks);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + tasks.get(tasks.size() - 1));
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                } catch (ZenException e) {
-                    System.out.println(" NOOOO!!! " + e.getMessage());
-                }
-                System.out.println("____________________________________________________________");
-            } else if (input.equals("deadline")) {
-                System.out.println(" NOOOO!!! Please use the format: deadline <description> /by <date>");
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("deadline ")) {
-                String remaining = input.substring(9).trim();
-                int byIndex = remaining.indexOf(" /by ");
-                if (byIndex != -1 && byIndex + 5 < remaining.length()) {
-                    String description = remaining.substring(0, byIndex).trim();
-                    String by = remaining.substring(byIndex + 5).trim();
-                    try {
-                        tasks.add(new Deadline(description, by));
-                        storage.saveTasks(tasks);
-                        System.out.println(" Got it. I've added this task:");
-                        System.out.println("   " + tasks.get(tasks.size() - 1));
-                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    } catch (ZenException e) {
-                        System.out.println(" NOOOOO!!! " + e.getMessage());
-                    }
-                } else {
-                    System.out.println(" NOOOOO!!! Please use the format: deadline <description> /by <date>");
-                }
-                System.out.println("____________________________________________________________");
-            } else if (input.equals("event")) {
-                System.out.println(" NOOOOO!!! Please use the format: event <description> /from <start> /to <end>");
-                System.out.println("____________________________________________________________");
-            } else if (input.startsWith("event ")) {
-                String remaining = input.substring(6).trim();
-                int fromIndex = remaining.indexOf(" /from ");
-                int toIndex = remaining.indexOf(" /to ");
-                if (fromIndex != -1 && toIndex != -1 && fromIndex < toIndex && toIndex + 5 < remaining.length()) {
-                    String description = remaining.substring(0, fromIndex).trim();
-                    String from = remaining.substring(fromIndex + 7, toIndex).trim();
-                    String to = remaining.substring(toIndex + 5).trim();
-                    try {
-                        tasks.add(new Event(description, from, to));
-                        storage.saveTasks(tasks);
-                        System.out.println(" Got it. I've added this task:");
-                        System.out.println("   " + tasks.get(tasks.size() - 1));
-                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    } catch (ZenException e) {
-                        System.out.println(" NOOOOO!!! " + e.getMessage());
-                    }
-                } else {
-                    System.out.println(" NOOOOO!!! Please use the format: event <description> /from <start> /to <end>");
-                }
-                System.out.println("____________________________________________________________");
-            } else {
-                // Handle unknown commands and empty input
-                if (input.isEmpty()) {
-                    System.out.println(" NOOOOO!!! Please enter a command.");
-                } else {
-                    System.out.println(" NOOOOO!!! I'm sorry, but I don't know what that means :-(");
-                }
-                System.out.println("____________________________________________________________");
+                
+            } catch (ZenException e) {
+                ui.showError(e.getMessage());
+            } finally {
+                ui.showLine();
             }
         }
         
-        scanner.close();
+        ui.close();
+    }
+
+    /**
+     * Handles a single command and returns whether to exit
+     * @param fullCommand the command to handle
+     * @return true if the application should exit, false otherwise
+     * @throws ZenException if there's an error processing the command
+     */
+    private boolean handleCommand(String fullCommand) throws ZenException {
+        Parser.CommandType commandType = Parser.parseCommand(fullCommand);
+        
+        switch (commandType) {
+            case BYE:
+                ui.showGoodbye();
+                return true;
+                
+            case LIST:
+                ui.showTaskList(tasks.getTasks());
+                break;
+                
+            case MARK:
+                handleMarkCommand(fullCommand);
+                break;
+                
+            case UNMARK:
+                handleUnmarkCommand(fullCommand);
+                break;
+                
+            case DELETE:
+                handleDeleteCommand(fullCommand);
+                break;
+                
+            case TODO_EMPTY:
+                ui.showError("The description of a todo cannot be empty.");
+                break;
+                
+            case TODO:
+                handleTodoCommand(fullCommand);
+                break;
+                
+            case DEADLINE_EMPTY:
+                ui.showError("Please use the format: deadline <description> /by <date>");
+                break;
+                
+            case DEADLINE:
+                handleDeadlineCommand(fullCommand);
+                break;
+                
+            case EVENT_EMPTY:
+                ui.showError("Please use the format: event <description> /from <start> /to <end>");
+                break;
+                
+            case EVENT:
+                handleEventCommand(fullCommand);
+                break;
+                
+            case EMPTY:
+                ui.showError("Please enter a command.");
+                break;
+                
+            case UNKNOWN:
+            default:
+                ui.showError("I'm sorry, but I don't know what that means :-(");
+                break;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Handles mark command
+     */
+    private void handleMarkCommand(String command) throws ZenException {
+        int index = Parser.parseTaskIndex(command, "mark ");
+        if (index == -1) {
+            ui.showError("Please provide a valid task number!");
+            return;
+        }
+        
+        try {
+            Task task = tasks.markTask(index);
+            storage.save(tasks.getTasks());
+            ui.showTaskMarked(task);
+        } catch (IndexOutOfBoundsException e) {
+            ui.showError(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles unmark command
+     */
+    private void handleUnmarkCommand(String command) throws ZenException {
+        int index = Parser.parseTaskIndex(command, "unmark ");
+        if (index == -1) {
+            ui.showError("Please provide a valid task number!");
+            return;
+        }
+        
+        try {
+            Task task = tasks.unmarkTask(index);
+            storage.save(tasks.getTasks());
+            ui.showTaskUnmarked(task);
+        } catch (IndexOutOfBoundsException e) {
+            ui.showError(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles delete command
+     */
+    private void handleDeleteCommand(String command) throws ZenException {
+        int index = Parser.parseTaskIndex(command, "delete ");
+        if (index == -1) {
+            ui.showError("Please provide a valid task number!");
+            return;
+        }
+        
+        try {
+            Task task = tasks.deleteTask(index);
+            storage.save(tasks.getTasks());
+            ui.showTaskDeleted(task, tasks.size());
+        } catch (IndexOutOfBoundsException e) {
+            ui.showError(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles todo command
+     */
+    private void handleTodoCommand(String command) throws ZenException {
+        String description = Parser.parseTodoDescription(command);
+        Task task = new Todo(description);
+        tasks.addTask(task);
+        storage.save(tasks.getTasks());
+        ui.showTaskAdded(task, tasks.size());
+    }
+
+    /**
+     * Handles deadline command
+     */
+    private void handleDeadlineCommand(String command) throws ZenException {
+        Deadline info = Parser.parseDeadline(command);
+        if (info == null) {
+            ui.showError("Please use the format: deadline <description> /by <date>");
+            return;
+        }
+
+        tasks.addTask(info);
+        storage.save(tasks.getTasks());
+        ui.showTaskAdded(info, tasks.size());
+    }
+
+    /**
+     * Handles event command
+     */
+    private void handleEventCommand(String command) throws ZenException {
+        Event info = Parser.parseEvent(command);
+        if (info == null) {
+            ui.showError("Please use the format: event <description> /from <start> /to <end>");
+            return;
+        }
+        
+        tasks.addTask(info);
+        storage.save(tasks.getTasks());
+        ui.showTaskAdded(info, tasks.size());
+    }
+
+    /**
+     * Main method to start the application
+     */
+    public static void main(String[] args) {
+        new Zen().run();
     }
 }
