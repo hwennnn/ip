@@ -17,6 +17,7 @@ public class TaskList {
 
     /**
      * Creates a task list with the given tasks
+     *
      * @param tasks initial list of tasks
      */
     public TaskList(ArrayList<Task> tasks) {
@@ -25,6 +26,7 @@ public class TaskList {
 
     /**
      * Adds a task to the list
+     *
      * @param task the task to add
      */
     public void addTask(Task task) {
@@ -33,6 +35,7 @@ public class TaskList {
 
     /**
      * Removes a task from the list
+     *
      * @param index the index of the task to remove (0-based)
      * @return the removed task
      * @throws IndexOutOfBoundsException if index is invalid
@@ -46,6 +49,7 @@ public class TaskList {
 
     /**
      * Marks a task as done
+     *
      * @param index the index of the task to mark (0-based)
      * @return the marked task
      * @throws IndexOutOfBoundsException if index is invalid
@@ -61,6 +65,7 @@ public class TaskList {
 
     /**
      * Marks a task as not done
+     *
      * @param index the index of the task to unmark (0-based)
      * @return the unmarked task
      * @throws IndexOutOfBoundsException if index is invalid
@@ -76,6 +81,7 @@ public class TaskList {
 
     /**
      * Gets the task at the specified index
+     *
      * @param index the index of the task (0-based)
      * @return the task at the specified index
      * @throws IndexOutOfBoundsException if index is invalid
@@ -89,6 +95,7 @@ public class TaskList {
 
     /**
      * Gets the number of tasks in the list
+     *
      * @return the size of the task list
      */
     public int size() {
@@ -97,6 +104,7 @@ public class TaskList {
 
     /**
      * Checks if the task list is empty
+     *
      * @return true if the list is empty, false otherwise
      */
     public boolean isEmpty() {
@@ -105,6 +113,7 @@ public class TaskList {
 
     /**
      * Gets the underlying ArrayList of tasks
+     *
      * @return the ArrayList containing all tasks
      */
     public ArrayList<Task> getTasks() {

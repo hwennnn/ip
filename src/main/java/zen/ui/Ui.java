@@ -43,6 +43,7 @@ public class Ui {
 
     /**
      * Reads a command from the user
+     *
      * @return the user input as a trimmed string
      */
     public String readCommand() {
@@ -51,6 +52,7 @@ public class Ui {
 
     /**
      * Shows an error message
+     *
      * @param message the error message to display
      */
     public void showError(String message) {
@@ -66,6 +68,7 @@ public class Ui {
 
     /**
      * Shows the list of tasks
+     *
      * @param tasks the list of tasks to display
      */
     public void showTaskList(ArrayList<Task> tasks) {
@@ -81,6 +84,7 @@ public class Ui {
 
     /**
      * Shows a task that has been marked as done
+     *
      * @param task the task that was marked as done
      */
     public void showTaskMarked(Task task) {
@@ -90,6 +94,7 @@ public class Ui {
 
     /**
      * Shows a task that has been marked as not done
+     *
      * @param task the task that was marked as not done
      */
     public void showTaskUnmarked(Task task) {
@@ -99,7 +104,8 @@ public class Ui {
 
     /**
      * Shows a task that has been added
-     * @param task the task that was added
+     *
+     * @param task       the task that was added
      * @param totalTasks the total number of tasks after addition
      */
     public void showTaskAdded(Task task, int totalTasks) {
@@ -110,7 +116,8 @@ public class Ui {
 
     /**
      * Shows a task that has been deleted
-     * @param task the task that was deleted
+     *
+     * @param task       the task that was deleted
      * @param totalTasks the total number of tasks after deletion
      */
     public void showTaskDeleted(Task task, int totalTasks) {

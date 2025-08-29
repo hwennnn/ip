@@ -1,7 +1,9 @@
 package zen.command;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import zen.command.Parser;
 
 /**
@@ -25,7 +27,7 @@ public class ParserTest {
         // Test valid indices (converts from 1-based to 0-based)
         assertEquals(0, Parser.parseTaskIndex("mark 1", "mark "));
         assertEquals(4, Parser.parseTaskIndex("delete 5", "delete "));
-        
+
         // Test invalid inputs
         assertEquals(-1, Parser.parseTaskIndex("mark abc", "mark "));
         assertEquals(-1, Parser.parseTaskIndex("mark 0", "mark "));
