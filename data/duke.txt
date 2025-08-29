@@ -2,3 +2,9 @@ T | 1 | read book
 D | 0 | return book | June 6th
 T | 0 | join sports club
 E | 0 | project meeting | June 6th | June 7th
+D | 0 | return book | 2/12/2019 1800
+D | 0 | return something | Dec 01 2019
+D | 0 | ab | 2nd October 2007 at 13:45.30.123456789
+D | 0 | c | Dec 3 2007, 10:15 am
+D | 0 | d | Dec 5 2007
+D | 0 | d | deadline d /by 2007-12-05

@@ -1,7 +1,7 @@
 public class Event extends Task {
     
-    protected String from;
-    protected String to;
+    protected FlexibleDateTime from;
+    protected FlexibleDateTime to;
     
     public Event(String description, String from, String to) throws ZenException {
         super(description, TaskType.EVENT);
@@ -11,20 +11,29 @@ public class Event extends Task {
         if (to == null || to.trim().isEmpty()) {
             throw new ZenException("The event end time cannot be empty.");
         }
-        this.from = from.trim();
-        this.to = to.trim();
+        this.from = new FlexibleDateTime(from.trim());
+        this.to = new FlexibleDateTime(to.trim());
     }
     
     public String getFrom() {
-        return this.from;
+        return from.toString();
     }
-    
+
     public String getTo() {
-        return this.to;
+        return to.toString();
     }
     
+    public FlexibleDateTime getFlexibleFrom() {
+        return from;
+    }
+    
+    public FlexibleDateTime getFlexibleTo() {
+        return to;
+    }
+    
+
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        return super.toString() + " (from: " + from.toString() + " to: " + to.toString() + ")";
     }
 } 
