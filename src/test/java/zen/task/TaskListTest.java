@@ -2,10 +2,12 @@ package zen.task;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import zen.exception.ZenException;
 
 /**
@@ -35,7 +37,7 @@ public class TaskListTest {
     public void deleteTask_validIndex_removesTask() throws ZenException {
         taskList.addTask(task1);
         taskList.addTask(task2);
-        
+
         Task deletedTask = taskList.deleteTask(0);
         assertEquals(task1, deletedTask);
         assertEquals(1, taskList.size());
@@ -45,11 +47,11 @@ public class TaskListTest {
     @Test
     public void deleteTask_invalidIndex_throwsException() throws ZenException {
         taskList.addTask(task1);
-        
+
         assertThrows(IndexOutOfBoundsException.class, () -> {
             taskList.deleteTask(-1);
         });
-        
+
         assertThrows(IndexOutOfBoundsException.class, () -> {
             taskList.deleteTask(1);
         });
@@ -59,7 +61,7 @@ public class TaskListTest {
     public void markTask_validIndex_marksTaskAsDone() throws ZenException {
         taskList.addTask(task1);
         assertFalse(task1.isDone());
-        
+
         taskList.markTask(0);
         assertTrue(task1.isDone());
     }
