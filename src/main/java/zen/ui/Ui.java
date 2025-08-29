@@ -1,9 +1,9 @@
 package zen.ui;
 
-import zen.task.Task;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import zen.task.Task;
 
 /**
  * Handles all user interface operations including input and output
@@ -12,6 +12,9 @@ public class Ui {
     private static final String LINE_SEPARATOR = "____________________________________________________________";
     private Scanner scanner;
 
+    /**
+     * Constructs a new Ui instance and initializes the scanner for user input.
+     */
     public Ui() {
         this.scanner = new Scanner(System.in);
     }
