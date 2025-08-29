@@ -10,6 +10,8 @@ import zen.task.TaskList;
 import zen.task.Todo;
 import zen.ui.Ui;
 
+import java.util.ArrayList;
+
 /**
  * Main class for the Zen task management chatbot
  */
@@ -117,6 +119,14 @@ public class Zen {
 
         case EVENT:
             handleEventCommand(fullCommand);
+            break;
+
+        case FIND_EMPTY:
+            ui.showError("Please provide a keyword to search for.");
+            break;
+
+        case FIND:
+            handleFindCommand(fullCommand);
             break;
 
         case EMPTY:
@@ -228,5 +238,14 @@ public class Zen {
         tasks.addTask(info);
         storage.save(tasks.getTasks());
         ui.showTaskAdded(info, tasks.size());
+    }
+
+    /**
+     * Handles find command
+     */
+    private void handleFindCommand(String command) {
+        String keyword = Parser.parseFindKeyword(command);
+        ArrayList<Task> matchingTasks = tasks.findTasks(keyword);
+        ui.showMatchingTasks(matchingTasks);
     }
 }

@@ -44,6 +44,10 @@ public class Parser {
             return CommandType.EVENT_EMPTY;
         } else if (command.startsWith("event ")) {
             return CommandType.EVENT;
+        } else if (command.equals("find")) {
+            return CommandType.FIND_EMPTY;
+        } else if (command.startsWith("find ")) {
+            return CommandType.FIND;
         } else {
             return CommandType.UNKNOWN;
         }
@@ -74,6 +78,16 @@ public class Parser {
      */
     public static String parseTodoDescription(String command) {
         return command.substring(5).trim(); // Remove "todo "
+    }
+
+    /**
+     * Extracts the keyword from find commands
+     *
+     * @param command the find command
+     * @return the search keyword
+     */
+    public static String parseFindKeyword(String command) {
+        return command.substring(5).trim(); // Remove "find "
     }
 
     /**
@@ -122,6 +136,6 @@ public class Parser {
     public enum CommandType {
         BYE, LIST, MARK, UNMARK, DELETE,
         TODO, TODO_EMPTY, DEADLINE, DEADLINE_EMPTY,
-        EVENT, EVENT_EMPTY, UNKNOWN, EMPTY
+        EVENT, EVENT_EMPTY, FIND, FIND_EMPTY, UNKNOWN, EMPTY
     }
 }
