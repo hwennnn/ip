@@ -4,7 +4,8 @@ import java.util.Scanner;
 public class Zen {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Task> tasks = new ArrayList<>();
+        TaskStorage storage = new TaskStorage();
+        ArrayList<Task> tasks = storage.loadTasks();
         
         System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Zen");
@@ -35,6 +36,7 @@ public class Zen {
                     int taskIndex = Integer.parseInt(input.substring(5)) - 1;
                     if (taskIndex >= 0 && taskIndex < tasks.size()) {
                         tasks.get(taskIndex).markAsDone();
+                        storage.saveTasks(tasks);
                         System.out.println(" Nice! I've marked this task as done:");
                         System.out.println("   " + tasks.get(taskIndex));
                     } else {
@@ -49,6 +51,7 @@ public class Zen {
                     int taskIndex = Integer.parseInt(input.substring(7)) - 1;
                     if (taskIndex >= 0 && taskIndex < tasks.size()) {
                         tasks.get(taskIndex).markAsNotDone();
+                        storage.saveTasks(tasks);
                         System.out.println(" OK, I've marked this task as not done yet:");
                         System.out.println("   " + tasks.get(taskIndex));
                     } else {
@@ -63,6 +66,7 @@ public class Zen {
                     int taskIndex = Integer.parseInt(input.substring(7)) - 1;
                     if (taskIndex >= 0 && taskIndex < tasks.size()) {
                         Task removedTask = tasks.remove(taskIndex);
+                        storage.saveTasks(tasks);
                         System.out.println(" Noted. I've removed this task:");
                         System.out.println("   " + removedTask);
                         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -80,6 +84,7 @@ public class Zen {
                 String description = input.substring(5).trim();
                 try {
                     tasks.add(new Todo(description));
+                    storage.saveTasks(tasks);
                     System.out.println(" Got it. I've added this task:");
                     System.out.println("   " + tasks.get(tasks.size() - 1));
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -98,6 +103,7 @@ public class Zen {
                     String by = remaining.substring(byIndex + 5).trim();
                     try {
                         tasks.add(new Deadline(description, by));
+                        storage.saveTasks(tasks);
                         System.out.println(" Got it. I've added this task:");
                         System.out.println("   " + tasks.get(tasks.size() - 1));
                         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -121,6 +127,7 @@ public class Zen {
                     String to = remaining.substring(toIndex + 5).trim();
                     try {
                         tasks.add(new Event(description, from, to));
+                        storage.saveTasks(tasks);
                         System.out.println(" Got it. I've added this task:");
                         System.out.println("   " + tasks.get(tasks.size() - 1));
                         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
