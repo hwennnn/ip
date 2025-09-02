@@ -17,12 +17,19 @@ public class Storage {
     private static final String DATA_DIRECTORY = "data";
     private static final String DATA_FILE = "duke.txt";
     private final Path dataPath;
+    
+    /**
+     * Constructs a Storage instance with the given data file location
+     */
+    public Storage(String dataFile) {
+        this.dataPath = Paths.get(DATA_DIRECTORY, dataFile);
+    }
 
     /**
      * Constructs a Storage instance with the default data file location
      */
     public Storage() {
-        this.dataPath = Paths.get(DATA_DIRECTORY, DATA_FILE);
+        this(DATA_FILE);
     }
 
     /**

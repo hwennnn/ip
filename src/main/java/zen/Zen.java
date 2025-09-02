@@ -12,6 +12,7 @@ import zen.ui.Ui;
 
 import java.util.ArrayList;
 
+
 /**
  * Main class for the Zen task management chatbot
  */
@@ -247,5 +248,12 @@ public class Zen {
         String keyword = Parser.parseFindKeyword(command);
         ArrayList<Task> matchingTasks = tasks.findTasks(keyword);
         ui.showMatchingTasks(matchingTasks);
+    }
+
+    /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Zen heard: " + input;
     }
 }
