@@ -1,11 +1,5 @@
 package zen.storage;
 
-import zen.exception.ZenException;
-import zen.task.Deadline;
-import zen.task.Event;
-import zen.task.Task;
-import zen.task.Todo;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,11 +7,36 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import zen.exception.ZenException;
+import zen.task.Deadline;
+import zen.task.Event;
+import zen.task.Task;
+import zen.task.Todo;
+
+/**
+ * Handles the loading and saving of tasks to and from a file.
+ * This class manages task persistence using a simple text-based format.
+ */
 public class Storage {
+    // File and directory constants
     private static final String DATA_DIRECTORY = "data";
     private static final String DATA_FILE = "duke.txt";
+
+    // File format constants
+    private static final String FIELD_SEPARATOR = " | ";
+    private static final String DONE_STATUS = "1";
+    private static final String NOT_DONE_STATUS = "0";
+    private static final String TASK_TYPE_TODO = "T";
+    private static final String TASK_TYPE_DEADLINE = "D";
+    private static final String TASK_TYPE_EVENT = "E";
+
+    // Minimum field requirements
+    private static final int MIN_TASK_FIELDS = 3;
+    private static final int MIN_DEADLINE_FIELDS = 4;
+    private static final int MIN_EVENT_FIELDS = 5;
+
     private final Path dataPath;
-    
+
     /**
      * Constructs a Storage instance with the given data file location
      */
@@ -104,20 +123,42 @@ public class Storage {
      * @return String representation for file
      */
     private String taskToFileFormat(Task task) {
-        String status = task.isDone() ? "1" : "0";
+        String status = task.isDone() ? DONE_STATUS : NOT_DONE_STATUS;
         String type = task.getTaskType().getSymbol();
 
         if (task instanceof Todo) {
-            return type + " | " + status + " | " + task.getDescription();
+            return formatTodoTask(type, status, task.getDescription());
         } else if (task instanceof Deadline) {
             Deadline deadline = (Deadline) task;
-            return type + " | " + status + " | " + task.getDescription() + " | " + deadline.getBy();
+            return formatDeadlineTask(type, status, task.getDescription(), deadline.getBy());
         } else if (task instanceof Event) {
             Event event = (Event) task;
-            return type + " | " + status + " | " + task.getDescription() + " | " + event.getFrom() + " | " + event.getTo();
+            return formatEventTask(type, status, task.getDescription(), event.getFrom(), event.getTo());
         }
 
-        return type + " | " + status + " | " + task.getDescription();
+        return formatTodoTask(type, status, task.getDescription());
+    }
+
+    /**
+     * Formats a todo task for file storage
+     */
+    private String formatTodoTask(String type, String status, String description) {
+        return type + FIELD_SEPARATOR + status + FIELD_SEPARATOR + description;
+    }
+
+    /**
+     * Formats a deadline task for file storage
+     */
+    private String formatDeadlineTask(String type, String status, String description, String by) {
+        return type + FIELD_SEPARATOR + status + FIELD_SEPARATOR + description + FIELD_SEPARATOR + by;
+    }
+
+    /**
+     * Formats an event task for file storage
+     */
+    private String formatEventTask(String type, String status, String description, String from, String to) {
+        return type + FIELD_SEPARATOR + status + FIELD_SEPARATOR + description 
+                + FIELD_SEPARATOR + from + FIELD_SEPARATOR + to;
     }
 
     /**
@@ -128,50 +169,78 @@ public class Storage {
      * @throws ZenException if task creation fails
      */
     private Task parseTaskFromLine(String line) throws ZenException {
-        if (line == null || line.trim().isEmpty()) {
+        if (isEmptyLine(line)) {
             return null;
         }
 
         String[] parts = line.split(" \\| ");
-        if (parts.length < 3) {
-            throw new IllegalArgumentException("Invalid line format");
-        }
+        validateMinimumFields(parts);
 
         String type = parts[0].trim();
-        boolean isDone = "1".equals(parts[1].trim());
+        boolean isDone = DONE_STATUS.equals(parts[1].trim());
         String description = parts[2].trim();
 
-        Task task = null;
-
-        switch (type) {
-        case "T":
-            task = new Todo(description);
-            break;
-        case "D":
-            // D | 0 | return book | June 6th
-            if (parts.length < 4) {
-                throw new IllegalArgumentException("Deadline missing date");
-            }
-            String by = parts[3].trim();
-            task = new Deadline(description, by);
-            break;
-        case "E":
-            // E | 0 | project meeting | Aug 6th 2pm | Aug 7th 9pm
-            if (parts.length < 5) {
-                throw new IllegalArgumentException("Event missing time information");
-            }
-            String from = parts[3].trim();
-            String to = parts[4].trim();
-            task = new Event(description, from, to);
-            break;
-        default:
-            throw new IllegalArgumentException("Unknown task type: " + type);
-        }
+        Task task = createTaskByType(type, description, parts);
 
         if (task != null && isDone) {
             task.markAsDone();
         }
 
         return task;
+    }
+
+    /**
+     * Checks if a line is empty or null
+     */
+    private boolean isEmptyLine(String line) {
+        return line == null || line.trim().isEmpty();
+    }
+
+    /**
+     * Validates that the line has the minimum required fields
+     */
+    private void validateMinimumFields(String[] parts) {
+        if (parts.length < MIN_TASK_FIELDS) {
+            throw new IllegalArgumentException("Invalid line format");
+        }
+    }
+
+    /**
+     * Creates a task based on its type
+     */
+    private Task createTaskByType(String type, String description, String[] parts) throws ZenException {
+        switch (type) {
+        case TASK_TYPE_TODO:
+            return new Todo(description);
+        case TASK_TYPE_DEADLINE:
+            return createDeadlineTask(description, parts);
+        case TASK_TYPE_EVENT:
+            return createEventTask(description, parts);
+        default:
+            throw new IllegalArgumentException("Unknown task type: " + type);
+        }
+    }
+
+    /**
+     * Creates a deadline task from parsed parts
+     */
+    private Task createDeadlineTask(String description, String[] parts) throws ZenException {
+        if (parts.length < MIN_DEADLINE_FIELDS) {
+            throw new IllegalArgumentException("Deadline missing date");
+        }
+        String by = parts[3].trim();
+        return new Deadline(description, by);
+    }
+
+    /**
+     * Creates an event task from parsed parts
+     */
+    private Task createEventTask(String description, String[] parts) throws ZenException {
+        if (parts.length < MIN_EVENT_FIELDS) {
+            throw new IllegalArgumentException("Event missing time information");
+        }
+        String from = parts[3].trim();
+        String to = parts[4].trim();
+        return new Event(description, from, to);
     }
 }

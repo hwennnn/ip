@@ -126,12 +126,13 @@ public class TaskList {
      * @param keyword the keyword to search for
      * @return ArrayList of tasks that match the keyword (case-insensitive)
      */
-    public ArrayList<Task> findTasks(String keyword) {
+    public ArrayList<Task> findTasksContaining(String keyword) {
         ArrayList<Task> matchingTasks = new ArrayList<>();
-        String lowerKeyword = keyword.toLowerCase();
+        String lowercaseKeyword = keyword.toLowerCase();
 
         for (Task task : tasks) {
-            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
+            String taskDescription = task.getDescription().toLowerCase();
+            if (taskDescription.contains(lowercaseKeyword)) {
                 matchingTasks.add(task);
             }
         }
