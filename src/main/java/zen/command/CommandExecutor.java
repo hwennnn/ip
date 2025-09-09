@@ -19,7 +19,7 @@ public class CommandExecutor {
     // Error message constants
     private static final String ERROR_TODO_EMPTY = "The description of a todo cannot be empty.";
     private static final String ERROR_DEADLINE_FORMAT = "Please use the format: deadline <description> /by <date>";
-    private static final String ERROR_EVENT_FORMAT = 
+    private static final String ERROR_EVENT_FORMAT =
             "Please use the format: event <description> /from <start> /to <end>";
     private static final String ERROR_FIND_EMPTY = "Please provide a keyword to search for.";
     private static final String ERROR_EMPTY_COMMAND = "Please enter a command.";
@@ -86,6 +86,9 @@ public class CommandExecutor {
         case LIST:
             handleListCommand(isGuiMode);
             break;
+        case HELP:
+            handleHelpCommand(isGuiMode);
+            break;
         case MARK:
             handleMarkCommand(fullCommand, isGuiMode);
             break;
@@ -140,6 +143,12 @@ public class CommandExecutor {
     private void handleListCommand(boolean isGuiMode) {
         if (!isGuiMode && ui != null) {
             ui.showTaskList(tasks.getTasks());
+        }
+    }
+
+    private void handleHelpCommand(boolean isGuiMode) {
+        if (!isGuiMode && ui != null) {
+            ui.showHelp();
         }
     }
 
@@ -336,6 +345,8 @@ public class CommandExecutor {
             return GuiResponseFormatter.formatGoodbye();
         case LIST:
             return GuiResponseFormatter.formatTaskList(tasks.getTasks());
+        case HELP:
+            return GuiResponseFormatter.formatHelp();
         case MARK:
             return getMarkResponse(fullCommand);
         case UNMARK:

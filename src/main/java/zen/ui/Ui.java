@@ -145,6 +145,34 @@ public class Ui {
     }
 
     /**
+     * Shows the help message with all available commands
+     */
+    public void showHelp() {
+        System.out.println(" Here are the commands you can use:");
+        System.out.println();
+        System.out.println(" bye                              - Exit the application");
+        System.out.println(" list                             - Show all tasks");
+        System.out.println(" help                             - Show this help message");
+        System.out.println();
+        System.out.println(" todo <description>               - Add a todo task");
+        System.out.println(" deadline <description> /by <date> - Add a deadline task");
+        System.out.println(" event <description> /from <start> /to <end> - Add an event task");
+        System.out.println();
+        System.out.println(" mark <number>                    - Mark a task as done");
+        System.out.println(" unmark <number>                  - Mark a task as not done");
+        System.out.println(" delete <number>                  - Delete a task");
+        System.out.println();
+        System.out.println(" find <keyword>                   - Find tasks containing keyword");
+        System.out.println();
+        System.out.println(" Examples:");
+        System.out.println("   todo Buy groceries");
+        System.out.println("   deadline Submit report /by 2024-12-25");
+        System.out.println("   event Team meeting /from 2024-12-20 2pm /to 4pm");
+        System.out.println("   mark 1");
+        System.out.println("   find meeting");
+    }
+
+    /**
      * Closes the scanner when the application ends
      */
     public void close() {

@@ -63,6 +63,8 @@ public class Parser {
             return CommandType.BYE;
         case "list":
             return CommandType.LIST;
+        case "help":
+            return CommandType.HELP;
         case "todo":
             return CommandType.TODO_EMPTY;
         case "deadline":
@@ -213,7 +215,7 @@ public class Parser {
      * Enum representing different command types
      */
     public enum CommandType {
-        BYE, LIST, MARK, UNMARK, DELETE,
+        BYE, LIST, HELP, MARK, UNMARK, DELETE,
         TODO, TODO_EMPTY, DEADLINE, DEADLINE_EMPTY,
         EVENT, EVENT_EMPTY, FIND, FIND_EMPTY, UNKNOWN, EMPTY
     }
