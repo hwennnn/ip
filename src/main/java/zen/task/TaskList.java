@@ -143,22 +143,23 @@ public class TaskList {
      * @param keyword the keyword to search for
      * @return ArrayList of tasks that match the keyword (case-insensitive)
      */
-    public ArrayList<Task> findTasks(String keyword) {
+    public ArrayList<Task> findTasksContaining(String keyword) {
         assert keyword != null : "Search keyword should not be null";
         assert tasks != null : "Tasks list should be initialized before searching";
-        
+
         ArrayList<Task> matchingTasks = new ArrayList<>();
-        String lowerKeyword = keyword.toLowerCase();
+        String lowercaseKeyword = keyword.toLowerCase();
 
         for (Task task : tasks) {
-            assert task != null : "Task in list should not be null";
-            assert task.getDescription() != null : "Task description should not be null";
-            if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
-                matchingTasks.add(task);
+            String taskDescription = task.getDescription().toLowerCase();
+            if (taskDescription.contains(lowercaseKeyword)) {
+                assert task.getDescription() != null : "Task description should not be null";
+                if (task.getDescription().toLowerCase().contains(lowercaseKeyword)) {
+                    matchingTasks.add(task);
+                }
             }
         }
 
-        assert matchingTasks != null : "Matching tasks list should not be null";
         return matchingTasks;
     }
 }
