@@ -21,7 +21,9 @@ public class TaskList {
      * @param tasks initial list of tasks
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "Tasks list should not be null";
         this.tasks = new ArrayList<>(tasks);
+        assert this.tasks != null : "Internal tasks list should be properly initialized";
     }
 
     /**
@@ -30,7 +32,11 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
+        assert task != null : "Task to be added should not be null";
+        assert tasks != null : "Tasks list should be initialized before adding tasks";
+        int sizeBefore = tasks.size();
         tasks.add(task);
+        assert tasks.size() == sizeBefore + 1 : "Task list size should increase by 1 after adding a task";
     }
 
     /**
@@ -41,10 +47,15 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is invalid
      */
     public Task deleteTask(int index) {
+        assert tasks != null : "Tasks list should be initialized before deleting tasks";
         if (index < 0 || index >= tasks.size()) {
             throw new IndexOutOfBoundsException("Task index is out of range!");
         }
-        return tasks.remove(index);
+        int sizeBefore = tasks.size();
+        Task removedTask = tasks.remove(index);
+        assert removedTask != null : "Removed task should not be null for valid index";
+        assert tasks.size() == sizeBefore - 1 : "Task list size should decrease by 1 after removing a task";
+        return removedTask;
     }
 
     /**
@@ -55,11 +66,14 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is invalid
      */
     public Task markTask(int index) {
+        assert tasks != null : "Tasks list should be initialized before marking tasks";
         if (index < 0 || index >= tasks.size()) {
             throw new IndexOutOfBoundsException("Task index is out of range!");
         }
         Task task = tasks.get(index);
+        assert task != null : "Task at valid index should not be null";
         task.markAsDone();
+        assert task.isDone() : "Task should be marked as done after calling markAsDone()";
         return task;
     }
 
@@ -71,11 +85,14 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if index is invalid
      */
     public Task unmarkTask(int index) {
+        assert tasks != null : "Tasks list should be initialized before unmarking tasks";
         if (index < 0 || index >= tasks.size()) {
             throw new IndexOutOfBoundsException("Task index is out of range!");
         }
         Task task = tasks.get(index);
+        assert task != null : "Task at valid index should not be null";
         task.markAsNotDone();
+        assert !task.isDone() : "Task should be marked as not done after calling markAsNotDone()";
         return task;
     }
 
@@ -127,15 +144,21 @@ public class TaskList {
      * @return ArrayList of tasks that match the keyword (case-insensitive)
      */
     public ArrayList<Task> findTasks(String keyword) {
+        assert keyword != null : "Search keyword should not be null";
+        assert tasks != null : "Tasks list should be initialized before searching";
+        
         ArrayList<Task> matchingTasks = new ArrayList<>();
         String lowerKeyword = keyword.toLowerCase();
 
         for (Task task : tasks) {
+            assert task != null : "Task in list should not be null";
+            assert task.getDescription() != null : "Task description should not be null";
             if (task.getDescription().toLowerCase().contains(lowerKeyword)) {
                 matchingTasks.add(task);
             }
         }
 
+        assert matchingTasks != null : "Matching tasks list should not be null";
         return matchingTasks;
     }
 }
