@@ -14,8 +14,11 @@ import javafx.scene.layout.VBox;
  * Controller for the main GUI.
  */
 public class MainWindow extends AnchorPane {
-    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private final Image dukeImage = new Image(this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    // Source: https://unsplash.com/photos/a-man-standing-in-front-of-a-purple-wall-bYODySpLIhE
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.jpeg"));
+
+    // Source: https://unsplash.com/photos/a-green-rectangle-with-white-text-on-it-su4Y9-LWE50
+    private final Image zenImage = new Image(this.getClass().getResourceAsStream("/images/DaZen.jpg"));
 
     @FXML
     private ScrollPane scrollPane;
@@ -79,7 +82,7 @@ public class MainWindow extends AnchorPane {
     private void showWelcomeMessage() {
         String welcomeMessage = "Hello! I'm Zen\nWhat can I do for you?";
         dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog(welcomeMessage, dukeImage)
+                DialogBox.getDukeDialog(welcomeMessage, zenImage)
         );
     }
 
@@ -100,7 +103,7 @@ public class MainWindow extends AnchorPane {
         String response = this.zen.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, dukeImage)
+                DialogBox.getDukeDialog(response, zenImage)
         );
         userInput.clear();
         
