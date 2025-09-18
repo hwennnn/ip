@@ -10,7 +10,17 @@ import zen.ui.Ui;
 
 
 /**
- * Main class for the Zen task management chatbot
+ * Main class for the Zen task management chatbot.
+ * 
+ * This class serves as the core orchestrator for the Zen application,
+ * managing the interaction between the UI, storage, task management, and command processing components.
+ * It supports both console and GUI modes of operation.
+ * 
+ * Key responsibilities:
+ * - Initialize and coordinate all major components (UI, Storage, TaskList, CommandExecutor)
+ * - Handle application lifecycle (startup, main loop, shutdown)
+ * - Provide unified interface for both console and GUI interactions
+ * - Manage error handling and recovery during initialization
  */
 public class Zen {
 
@@ -20,7 +30,13 @@ public class Zen {
     private CommandExecutor commandExecutor;
 
     /**
-     * Constructs a Zen instance with default data file location
+     * Constructs a Zen instance with default data file location.
+     * 
+     * Initializes all core components with proper error handling.
+     * If the data file cannot be loaded, creates a new empty task list to ensure
+     * the application remains functional.
+     *
+     * @throws RuntimeException if critical components fail to initialize (rare)
      */
     public Zen() {
         ui = new Ui();
@@ -70,7 +86,15 @@ public class Zen {
 
 
     /**
-     * Generates a response for the user's chat message.
+     * Generates a response for the user's chat message in GUI mode.
+     * 
+     * This method provides the main interface for GUI interactions.
+     * It processes user input through the command executor and returns formatted
+     * responses suitable for display in the chat interface.
+     *
+     * @param input the user's input command (can be any valid Zen command)
+     * @return formatted response string for display in the GUI
+     * @see CommandExecutor#executeCommandForGui(String)
      */
     public String getResponse(String input) {
         try {

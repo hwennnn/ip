@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
@@ -28,6 +30,39 @@ public class MainWindow extends AnchorPane {
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+
+        // AI-Enhanced: Add keyboard shortcuts for better UX
+        setupKeyboardShortcuts();
+    }
+
+    /**
+     * AI-Generated: Sets up keyboard shortcuts for improved user experience.
+     * - Enter: Send message
+     * - Ctrl+L: Clear chat history
+     */
+    private void setupKeyboardShortcuts() {
+        userInput.setOnKeyPressed(this::handleKeyPressed);
+    }
+
+    /**
+     * AI-Generated: Handles keyboard shortcuts.
+     * Note: Enter key is handled by TextField's onAction, so only handle other shortcuts here
+     * @param event the keyboard event
+     */
+    @FXML
+    private void handleKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.L && event.isControlDown()) {
+            clearChatHistory();
+            event.consume();
+        }
+    }
+
+    /**
+     * AI-Generated: Clears the chat history and shows welcome message.
+     */
+    private void clearChatHistory() {
+        dialogContainer.getChildren().clear();
+        showWelcomeMessage();
     }
 
     /**
@@ -55,6 +90,13 @@ public class MainWindow extends AnchorPane {
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+
+        if (input == null) {
+            return; // Guard against null input
+        }
+
+        input = input.trim(); // Remove leading/trailing whitespace
+
         String response = this.zen.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),

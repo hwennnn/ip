@@ -169,7 +169,8 @@ public class Ui {
         System.out.println("   deadline Submit report /by 2024-12-25");
         System.out.println("   event Team meeting /from 2024-12-20 2pm /to 4pm");
         System.out.println("   mark 1");
-        System.out.println("   find meeting");
+        System.out.println("   find meeting\n\n");
+        System.out.println(" Tips: use Ctrl+L to clear chat history");
     }
 
     /**

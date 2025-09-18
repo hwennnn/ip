@@ -16,15 +16,16 @@ import zen.ui.Ui;
  * command execution logic from the main application flow.
  */
 public class CommandExecutor {
-    // Error message constants
-    private static final String ERROR_TODO_EMPTY = "The description of a todo cannot be empty.";
-    private static final String ERROR_DEADLINE_FORMAT = "Please use the format: deadline <description> /by <date>";
-    private static final String ERROR_EVENT_FORMAT =
-            "Please use the format: event <description> /from <start> /to <end>";
-    private static final String ERROR_FIND_EMPTY = "Please provide a keyword to search for.";
-    private static final String ERROR_EMPTY_COMMAND = "Please enter a command.";
-    private static final String ERROR_UNKNOWN_COMMAND = "I'm sorry, but I don't know what that means :-(";
-    private static final String ERROR_INVALID_TASK_NUMBER = "Please provide a valid task number!";
+    // AI-Enhanced: More user-friendly and descriptive error messages
+    private static final String ERROR_TODO_EMPTY = "📝 Oops! Your todo needs a description. Try: todo buy groceries";
+    private static final String ERROR_DEADLINE_FORMAT = "📅 Let me help! Use this format: deadline <task> /by <date>\n"
+            + "Example: deadline submit report /by 2024-12-01";
+    private static final String ERROR_EVENT_FORMAT = "📆 Almost there! Use this format: event <task> /from <start> /to <end>\n"
+            + "Example: event meeting /from 2024-12-01 14:00 /to 2024-12-01 15:00";
+    private static final String ERROR_FIND_EMPTY = "🔍 What should I search for? Try: find meeting";
+    private static final String ERROR_EMPTY_COMMAND = "💭 I'm listening! Type a command like 'list', 'todo', or 'help'";
+    private static final String ERROR_UNKNOWN_COMMAND = "🤔 I don't recognize that command. Type 'help' to see what I can do!";
+    private static final String ERROR_INVALID_TASK_NUMBER = "🔢 Please provide a valid task number (check 'list')!";
 
     private final TaskList tasks;
     private final Storage storage;

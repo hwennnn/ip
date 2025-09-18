@@ -97,7 +97,8 @@ public class GuiResponseFormatter {
         help.append("  deadline Submit report /by 2024-12-25\n");
         help.append("  event Team meeting /from 2024-12-20 2pm /to 4pm\n");
         help.append("  mark 1\n");
-        help.append("  find meeting");
+        help.append("  find meeting\n\n");
+        help.append("Tips: use Ctrl+L to clear chat history");
         return help.toString();
     }
 
