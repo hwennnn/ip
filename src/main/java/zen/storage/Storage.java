@@ -20,7 +20,7 @@ import zen.task.Todo;
 public class Storage {
     // File and directory constants
     private static final String DATA_DIRECTORY = "data";
-    private static final String DATA_FILE = "duke.txt";
+    private static final String DATA_FILE = "zen.txt";
 
     // File format constants
     private static final String FIELD_SEPARATOR = " | ";

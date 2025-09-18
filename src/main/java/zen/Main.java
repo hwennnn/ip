@@ -1,12 +1,12 @@
 package zen;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 /**
  * Main class for the Zen task management chatbot
@@ -23,6 +23,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("Zen");
             fxmlLoader.<MainWindow>getController().setZen(zen);  // inject the Zen instance
             stage.show();
         } catch (IOException e) {
