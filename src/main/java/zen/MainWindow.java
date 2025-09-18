@@ -82,7 +82,7 @@ public class MainWindow extends AnchorPane {
     private void showWelcomeMessage() {
         String welcomeMessage = "Hello! I'm Zen\nWhat can I do for you?";
         dialogContainer.getChildren().add(
-                DialogBox.getDukeDialog(welcomeMessage, zenImage)
+                DialogBox.getZenDialog(welcomeMessage, zenImage)
         );
     }
 
@@ -103,7 +103,7 @@ public class MainWindow extends AnchorPane {
         String response = this.zen.getResponse(input);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, zenImage)
+                DialogBox.getZenDialog(response, zenImage)
         );
         userInput.clear();
         
